@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Rating Dataset- Analysis and Prediction Project!</title>
+      <!-- Our CSS -->
+<!--   <link rel="stylesheet" type="text/css" href="../static/css/style.css"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div id="sidebar">
+            <h2>We Love Wine!</h2>
+            <hr>
+            <br>
+            <h3>Where do you want to go?:</h3>
+            <p><a id='current-link' href='/'>Home</a></p>
+            <p><a href='/dashboard'>Tableau Dashboard</a></p>
+            <p><a href='/makeprediction'>Make a Prediction</a></p>
+            <p><a href='/repo'>Git Hub Repo</a></p>
+        </div>
+        <div class="content">
+            <div class="images-container">
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='img/wine.png') }}" alt="Wine Banner" width="1305" height="100">
+                    <img src="{{ url_for('static', filename='img/word_cloud.png') }}" alt="Wine Word Cloud" width="700" height="400">
+                    <video width="600" height="400" controls autoplay>
+                        <source src="{{ url_for('static', filename='img/wine_vid.mp4 ') }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="navigation-container">
+                    <h2>Where do you want to go?:</h2>
+                    <select id="endpointSelect">
+                        <option value="dashboard">Tableau Dashboard</option>
+                        <option value="makeprediction">Make a Prediction</option>
+                        <option value="repo">GitHub Repo</option>
+                    </select>
+                    <button onclick="redirectToEndpoint()">Go</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function redirectToEndpoint() {
+            var selectElement = document.getElementById("endpointSelect");
+            var selectedValue = selectElement.value;
+            window.location.href =  "/" + selectedValue;
+        }
+    </script>
+</body>
+</html>
