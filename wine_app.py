@@ -9,16 +9,16 @@ app = Flask(__name__, static_url_path='',
             static_folder='static',
             template_folder='templates')
 
-# Prediction Function 
+# Prediction Function
 def predict_rating(predict_row):
-    loaded_model = tf.keras.models.load_model('static/resources/model.h5')  # Loading trained model
-    result = loaded_model.predict(predict_row)  # Making a single prediction based on passed data-row and returning probablity result 
-    return result[0][0] 
+    loaded_model = tf.keras.models.load_model('/static/resources/model.h5')  # Loading trained model
+    result = loaded_model.predict(predict_row)  # Making a single prediction based on passed data-row and returning probablity result
+    return result[0][0]
 
 def pred_accuracy(prediction, target):
     if prediction == target:
         return "The model's prediction was correct!"
-    else: 
+    else:
         return "The model got it wrong for this wine"
 
 # Root endpoint (Landing/Main page with links to the other endpoints)
@@ -46,22 +46,22 @@ def repo():
 @app.route('/result', methods = ['POST'])
 def result3():
     # Loading wine data (for metadata display) & scaled data (for model prediction)
-    wine_df = pd.read_csv('static/resources/clean_wine_data_final.csv')
-    scaled_df = pd.read_csv('static/resources/scaled_data_df.csv')
+    wine_df = pd.read_csv('/static/resources/clean_wine_data_final.csv')
+    scaled_df = pd.read_csv('/static/resources/scaled_data_df.csv')
 
     if request.method == 'POST':
         to_predict_list = request.form.to_dict()    # turns form response into a dictionary
         wine = int(to_predict_list['number'])   # extracts value entered and sets as integer
-        
+
         # Extracts index from scaled_df and pulls metadata for selected wine based on index
         predict_index = scaled_df.iloc[wine,-2]
         wine_data = wine_df.iloc[predict_index,:]
-        
-        # extracts row based on integer and excludes index and target (last 2 columns) as numpy array and 
-        #converts to float32 for tensor model     
-        predict_row = np.expand_dims(scaled_df.iloc[wine,:-2], axis=0)  
+
+        # extracts row based on integer and excludes index and target (last 2 columns) as numpy array and
+        #converts to float32 for tensor model
+        predict_row = np.expand_dims(scaled_df.iloc[wine,:-2], axis=0)
         predict_row = np.asarray(predict_row).astype(np.float32)
-       
+
         # Calls predict_rating function and passes numpy array of scaled data
         prediction = predict_rating(predict_row)
 
@@ -69,7 +69,7 @@ def result3():
         if prediction < .5:
             prediction_text = f"We predict this wine is less than 90 points (Probability: {round(float(prediction),2)})"
             accuracy = pred_accuracy(False,scaled_df.iloc[wine,-1])
-        else: 
+        else:
             prediction_text = f"This wine is 90 points or higher! (Probability: {round(float(prediction),2)})"
             accuracy = pred_accuracy(True,scaled_df.iloc[wine,-1])
 
@@ -78,7 +78,7 @@ def result3():
         result['prediction'] = prediction_text
         result['accuracy'] = accuracy
 
-    return render_template('result.html', result = result)  # render results template and pass content dictionary for display 
+    return render_template('result.html', result = result)  # render results template and pass content dictionary for display
 
 # API endpoint to Trained Model Landing Page
 @app.route('/makeprediction2')
